@@ -24,22 +24,39 @@ class PatientLoadPredictor:
     def load_model(self, model_path=XGBOOST_MODEL):
         """Load trained model"""
         try:
+            print(f"Attempting to load model from: {model_path}")
+            print(f"Model path exists: {os.path.exists(model_path)}")
+            
             if not os.path.exists(model_path):
                 raise FileNotFoundError(f"Model file not found: {model_path}")
+            
+            file_size = os.path.getsize(model_path)
+            print(f"Model file size: {file_size} bytes")
+            
             with open(model_path, 'rb') as f:
                 self.model = pickle.load(f)
-            print(f"✓ Model loaded from {model_path}")
+            
+            print(f"✓ Model loaded successfully from {model_path}")
+            print(f"Model type: {type(self.model)}")
             return self.model
         except Exception as e:
-            print(f"Error loading model: {e}")
+            print(f"❌ Error loading model: {e}")
             raise
     
     def load_scaler(self, scaler_path=SCALER_MODEL):
         """Load scaler"""
-        with open(scaler_path, 'rb') as f:
-            self.scaler = pickle.load(f)
-        print(f"✓ Scaler loaded from {scaler_path}")
-        return self.scaler
+        try:
+            print(f"Attempting to load scaler from: {scaler_path}")
+            if not os.path.exists(scaler_path):
+                raise FileNotFoundError(f"Scaler file not found: {scaler_path}")
+            
+            with open(scaler_path, 'rb') as f:
+                self.scaler = pickle.load(f)
+            print(f"✓ Scaler loaded successfully from {scaler_path}")
+            return self.scaler
+        except Exception as e:
+            print(f"❌ Error loading scaler: {e}")
+            raise
     
     def load_label_encoders(self, encoders_path=None):
         """Load label encoders"""
