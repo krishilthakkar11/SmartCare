@@ -43,8 +43,6 @@ env/
 
 # Data and models
 data/*.csv
-models/*.pkl
-models/*.joblib
 
 # Streamlit
 .streamlit/
