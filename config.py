@@ -71,3 +71,11 @@ STREAMLIT_PORT = 8501
 STREAMLIT_THEME = 'light'
 
 print("✓ Configuration loaded successfully")
+
+# Debug: Check if model files exist
+import sys
+if not os.path.exists(MODELS_DIR):
+    print(f"⚠️ Models directory not found: {MODELS_DIR}")
+else:
+    model_files = os.listdir(MODELS_DIR)
+    print(f"✓ Models directory exists with {len(model_files)} files: {model_files}")
