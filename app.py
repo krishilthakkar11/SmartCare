@@ -50,8 +50,14 @@ if 'predictor' not in st.session_state:
         st.session_state.predictor.load_scaler()
         st.session_state.predictor.load_label_encoders()
         st.session_state.scheduler = SmartScheduler(st.session_state.predictor)
-    except FileNotFoundError:
-        st.error("⚠️ Models not found. Please train models first by running: python src/model_training.py")
+        print("✓ All models loaded successfully")
+    except FileNotFoundError as e:
+        st.error(f"⚠️ Models not found: {e}")
+        st.error("Please train models first by running: python src/model_training.py")
+        st.stop()
+    except Exception as e:
+        st.error(f"⚠️ Error loading models: {str(e)}")
+        st.error("Please check the models directory and ensure all model files exist.")
         st.stop()
 
 # Sidebar Navigation

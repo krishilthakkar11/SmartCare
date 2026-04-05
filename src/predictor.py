@@ -23,10 +23,16 @@ class PatientLoadPredictor:
         
     def load_model(self, model_path=XGBOOST_MODEL):
         """Load trained model"""
-        with open(model_path, 'rb') as f:
-            self.model = pickle.load(f)
-        print(f"✓ Model loaded from {model_path}")
-        return self.model
+        try:
+            if not os.path.exists(model_path):
+                raise FileNotFoundError(f"Model file not found: {model_path}")
+            with open(model_path, 'rb') as f:
+                self.model = pickle.load(f)
+            print(f"✓ Model loaded from {model_path}")
+            return self.model
+        except Exception as e:
+            print(f"Error loading model: {e}")
+            raise
     
     def load_scaler(self, scaler_path=SCALER_MODEL):
         """Load scaler"""
@@ -122,7 +128,10 @@ class PatientLoadPredictor:
             predicted_load, load_category
         """
         if self.model is None:
-            raise ValueError("Model not loaded. Call load_model first.")
+            raise ValueError("Model not loaded. Please call load_model() first. Check if model files exist in the models/ directory.")
+        
+        if self.scaler is None:
+            raise ValueError("Scaler not loaded. Please call load_scaler() first.")
         
         # Create input features
         X = self.create_prediction_input(
