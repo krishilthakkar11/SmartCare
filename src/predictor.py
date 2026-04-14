@@ -157,8 +157,31 @@ class PatientLoadPredictor:
             rolling_avg_3h, rolling_avg_24h, dept_avg_load
         )
         
+        # Scale features using the same scaler from training
+        numerical_features = ['hour_of_day', 'day_of_week', 'is_weekend', 'month',
+                            'prev_slot_load', 'rolling_avg_load_3h', 'rolling_avg_load_24h',
+                            'doctor_availability', 'dept_avg_load']
+        
+        # Scale only numerical features
+        X_numerical = X[numerical_features].copy()
+        X_numerical = pd.DataFrame(
+            self.scaler.transform(X_numerical),
+            columns=numerical_features
+        )
+        
+        # Keep non-numerical features as-is
+        X_scaled = X_numerical.copy()
+        X_scaled['is_holiday'] = X['is_holiday'].values[0]
+        X_scaled['department_encoded'] = X['department_encoded'].values[0]
+        
+        # Reorder columns to match training order
+        expected_columns = ['hour_of_day', 'day_of_week', 'is_weekend', 'month', 
+                          'prev_slot_load', 'rolling_avg_load_3h', 'rolling_avg_load_24h',
+                          'doctor_availability', 'dept_avg_load', 'is_holiday', 'department_encoded']
+        X_scaled = X_scaled[expected_columns]
+        
         # Predict
-        predicted_load = max(1, int(self.model.predict(X)[0]))
+        predicted_load = max(1, int(self.model.predict(X_scaled)[0]))
         
         # Categorize load
         load_category = self.categorize_load(predicted_load)

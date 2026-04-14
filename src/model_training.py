@@ -181,8 +181,8 @@ class ModelTrainer:
 
 def main():
     """Main execution function"""
-    from data_generator import HealthcareDataGenerator
-    from feature_engineering import FeatureEngineer
+    from src.data_generator import HealthcareDataGenerator
+    from src.feature_engineering import FeatureEngineer
     
     # Generate data
     print("Loading data...")

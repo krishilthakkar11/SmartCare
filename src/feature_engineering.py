@@ -138,7 +138,7 @@ class FeatureEngineer:
 
 def main():
     """Test feature engineering"""
-    from data_generator import HealthcareDataGenerator
+    from src.data_generator import HealthcareDataGenerator
     
     # Generate data
     generator = HealthcareDataGenerator()
